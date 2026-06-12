@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz – Ren klud til hver ko</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #d8d5c8;
+    }
+
+    .quiz-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+
+      /* Sæt selv billedstien her */
+      background-image: url('C:\Users\niza\OneDrive - Danish Agriculture & Food Council\Dokumenter\CowSafe\Escape room content\mobile\5iFV7chOnQd.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 7vh 7vw;
+    }
+
+    .quiz-content {
+      max-width: 900px;
+      color: #000;
+    }
+
+    .quiz-title {
+      font-size: clamp(2rem, 3vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0 0 12px 0;
+    }
+
+    .quiz-subtitle {
+      font-size: clamp(1.5rem, 2vw, 2.5rem);
+      font-style: italic;
+      font-weight: 400;
+      margin: 0 0 70px 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 34px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: clamp(1.25rem, 1.8vw, 2rem);
+      line-height: 1.3;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .option input[type="radio"] {
+      display: none;
+    }
+
+    .custom-radio {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border: 5px solid #4a4a4a;
+      border-radius: 50%;
+      background: #efefef;
+      display: inline-block;
+      position: relative;
+    }
+
+    .option input[type="radio"]:checked + .custom-radio::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #7b1e25;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .answer-button {
+      margin-top: 70px;
+      margin-left: 0;
+      background: #8b2f36;
+      color: white;
+      border: none;
+      padding: 22px 90px;
+      font-size: clamp(1.4rem, 1.8vw, 2rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .answer-button:hover {
+      background: #73252b;
+      transform: translateY(-1px);
+    }
+
+    .answer-button:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .quiz-wrapper {
+        padding: 40px 24px;
+      }
+
+      .quiz-subtitle {
+        margin-bottom: 40px;
+      }
+
+      .options {
+        gap: 24px;
+      }
+
+      .custom-radio {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-width: 4px;
+      }
+
+      .option input[type="radio"]:checked + .custom-radio::after {
+        width: 14px;
+        height: 14px;
+      }
+
+      .answer-button {
+        padding: 18px 50px;
+        width: 100%;
+        max-width: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-wrapper">
+    <div class="quiz-content">
+      <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
+      <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
+
+      <form class="options">
+        <label class="option">
+          <input type="radio" name="quiz-answer" />
+          <span class="custom-radio"></span>
+          <span>Kluden kommer til at lugte</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" />
+          <span class="custom-radio"></span>
+          <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" />
+          <span class="custom-radio"></span>
+          <span>Pjat, kluden kan sagtens dele</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" />
+          <span class="custom-radio"></span>
+          <span>Koen vil ikke dele sin klud med andre køer</span>
+        </label>
+
+        <button type="submit" class="answer-button">Svar</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
