@@ -15,47 +15,40 @@
       background: #d8d5c8;
     }
 
-.quiz-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
+    .quiz-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background-image: url('Baggrund.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 7vh 7vw;
+    }
 
-  background-image: url('Baggrund.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    .quiz-ko1 {
+      position: absolute;
+      bottom: 8%;
+      right: 12%;
+      width: clamp(180px, 22vw, 360px);
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
+    }
 
-  overflow: hidden;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 7vh 7vw;
-}
-
-/* Koen lægges oven på marken */
-.quiz-ko1 {
-  position: absolute;
-  bottom: 8%;
-  right: 12%;
-
-  width: clamp(180px, 22vw, 360px);
-  height: auto;
-
-  z-index: 2;
-  pointer-events: none;
-}
     .quiz-ko2 {
-  position: absolute;
-  bottom: 4%;
-  right: 4%;
-
-  width: clamp(180px, 22vw, 360px);
-  height: auto;
-
-  z-index: 2;
-  pointer-events: none;
-}
+      position: absolute;
+      bottom: 4%;
+      right: 4%;
+      width: clamp(180px, 22vw, 360px);
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
+    }
 
     .quiz-content {
       max-width: 900px;
@@ -178,41 +171,77 @@
 </head>
 <body>
   <div class="quiz-wrapper">
-   <img src="Ko.png" alt="Ko1" class="quiz-ko1" />
-   <img src="Ko.png" alt="Ko2" class="quiz-ko2" /> 
-      <div class="quiz-content">
-        <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
-        <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
-  
-        <form class="options">
-          <label class="option">
-            <input type="radio" name="quiz-answer" />
-            <span class="custom-radio"></span>
-            <span>Kluden kommer til at lugte</span>
-          </label>
-  
-          <label class="option">
-            <input type="radio" name="quiz-answer" />
-            <span class="custom-radio"></span>
-            <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
-          </label>
-  
-          <label class="option">
-            <input type="radio" name="quiz-answer" />
-            <span class="custom-radio"></span>
-            <span>Pjat, kluden kan sagtens dele</span>
-          </label>
-  
-          <label class="option">
-            <input type="radio" name="quiz-answer" />
-            <span class="custom-radio"></span>
-            <span>Koen vil ikke dele sin klud med andre køer</span>
-          </label>
-  
-          <button type="submit" class="answer-button">Svar</button>
-        </form>
-      </div>
-  
+    <img src="Ko.png" alt="Ko1" class="quiz-ko1" />
+    <img src="Ko.png" alt="Ko2" class="quiz-ko2" />
+
+    <div class="quiz-content">
+      <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
+      <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
+
+      <form class="options" id="quiz-form">
+        <label class="option">
+          <input type="radio" name="quiz-answer" value="forkert1" />
+          <span class="custom-radio"></span>
+          <span>Kluden kommer til at lugte</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" value="rigtig" />
+          <span class="custom-radio"></span>
+          <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" value="forkert2" />
+          <span class="custom-radio"></span>
+          <span>Pjat, kluden kan sagtens deles</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" name="quiz-answer" value="forkert3" />
+          <span class="custom-radio"></span>
+          <span>Koen vil ikke dele sin klud med andre køer</span>
+        </label>
+
+        <button type="submit" class="answer-button">Svar</button>
+      </form>
+    </div>
   </div>
+
+  <script>
+    const form = document.getElementById("quiz-form");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const selected = document.querySelector('input[name="quiz-answer"]:checked');
+
+      if (!selected) {
+        alert("Vælg et svar først.");
+        return;
+      }
+
+      if (selected.value === "rigtig") {
+        alert("Korrekt svar!");
+        // window.location.href = "sporgsmal2.html";
+      } else {
+        alert("Forkert svar – svarene bliver blandet rundt!");
+
+        const options = Array.from(form.querySelectorAll(".option"));
+
+        selected.checked = false;
+
+        for (let i = options.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [options[i], options[j]] = [options[j], options[i]];
+        }
+
+        options.forEach(option => option.remove());
+
+        const button = form.querySelector(".answer-button");
+        options.forEach(option => form.insertBefore(option, button));
+      }
+    });
+  </script>
 </body>
 </html>
