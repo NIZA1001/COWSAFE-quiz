@@ -32,6 +32,25 @@
       padding: 7vh 7vw;
     }
 
+    .quiz-ko {
+     position: relative;
+      width: 100%;
+      min-height: 100vh;
+
+      /* Sæt selv billedstien her */
+      background-image: url('Ko.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 7vh 7vw; 
+
+
+    }
+
     .quiz-content {
       max-width: 900px;
       color: #000;
@@ -153,37 +172,39 @@
 </head>
 <body>
   <div class="quiz-wrapper">
-    <div class="quiz-content">
-      <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
-      <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
-
-      <form class="options">
-        <label class="option">
-          <input type="radio" name="quiz-answer" />
-          <span class="custom-radio"></span>
-          <span>Kluden kommer til at lugte</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" />
-          <span class="custom-radio"></span>
-          <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" />
-          <span class="custom-radio"></span>
-          <span>Pjat, kluden kan sagtens dele</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" />
-          <span class="custom-radio"></span>
-          <span>Koen vil ikke dele sin klud med andre køer</span>
-        </label>
-
-        <button type="submit" class="answer-button">Svar</button>
-      </form>
+    <div class="quiz-ko">
+      <div class="quiz-content">
+        <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
+        <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
+  
+        <form class="options">
+          <label class="option">
+            <input type="radio" name="quiz-answer" />
+            <span class="custom-radio"></span>
+            <span>Kluden kommer til at lugte</span>
+          </label>
+  
+          <label class="option">
+            <input type="radio" name="quiz-answer" />
+            <span class="custom-radio"></span>
+            <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
+          </label>
+  
+          <label class="option">
+            <input type="radio" name="quiz-answer" />
+            <span class="custom-radio"></span>
+            <span>Pjat, kluden kan sagtens dele</span>
+          </label>
+  
+          <label class="option">
+            <input type="radio" name="quiz-answer" />
+            <span class="custom-radio"></span>
+            <span>Koen vil ikke dele sin klud med andre køer</span>
+          </label>
+  
+          <button type="submit" class="answer-button">Svar</button>
+        </form>
+      </div>
     </div>
   </div>
 </body>
