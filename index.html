@@ -15,41 +15,36 @@
       background: #d8d5c8;
     }
 
-    .quiz-wrapper {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
+.quiz-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
 
-      /* Sæt selv billedstien her */
-      background-image: url('Baggrund.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+  background-image: url('Baggrund.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 7vh 7vw;
-    }
+  overflow: hidden;
 
-    .quiz-ko {
-     position: relative;
-      width: 100%;
-      min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 7vh 7vw;
+}
 
-      /* Sæt selv billedstien her */
-      background-image: url('Ko.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+/* Koen lægges oven på marken */
+.quiz-ko {
+  position: absolute;
+  bottom: 8%;
+  right: 12%;
 
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 7vh 7vw; 
+  width: clamp(180px, 22vw, 360px);
+  height: auto;
 
-
-    }
+  z-index: 2;
+  pointer-events: none;
+}
 
     .quiz-content {
       max-width: 900px;
@@ -172,7 +167,7 @@
 </head>
 <body>
   <div class="quiz-wrapper">
-    <div class="quiz-ko">
+   <img src="Ko.png" alt="Ko" class="quiz-ko" />
       <div class="quiz-content">
         <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
         <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
@@ -205,7 +200,7 @@
           <button type="submit" class="answer-button">Svar</button>
         </form>
       </div>
-    </div>
+  
   </div>
 </body>
 </html>
