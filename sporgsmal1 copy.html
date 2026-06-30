@@ -23,8 +23,9 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      overflow: hidden;
+
       display: flex;
+      flex-direction: column;   /* 🔥 DET VIGTIGE */
       align-items: flex-start;
       justify-content: flex-start;
       padding: 7vh 7vw;
@@ -50,8 +51,15 @@
       pointer-events: none;
     }
 
-    .quiz-content {
-      max-width: 900px;
+    .quiz-content1 {
+      max-width: 1200px;
+      color: #000;
+      margin-bottom: 40px;
+    
+    }
+
+    .quiz-content2 {
+      max-width: 1400px;
       color: #000;
     }
 
@@ -80,7 +88,7 @@
       align-items: center;
       gap: 18px;
       font-size: clamp(1.25rem, 1.8vw, 2rem);
-      line-height: 1.3;
+      line-height: 2.5;
       cursor: pointer;
       user-select: none;
     }
@@ -132,6 +140,53 @@
       transform: translateY(-1px);
     }
 
+        .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .popup-content {
+      background: #8faa8f;
+      padding: 40px;
+      width: 60%;
+      max-width: 700px;
+      text-align: center;
+      position: relative;
+    }
+
+    .popup-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: gold;
+    }
+
+    .popup-content p {
+      font-size: 1.5rem;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    #popup-button {
+      background: #2f5d2f;
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
     .answer-button:active {
       transform: translateY(0);
     }
@@ -166,7 +221,55 @@
         width: 100%;
         max-width: 320px;
       }
+      #options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
     }
+    .quiz-end {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .quiz-end:not(.hidden) {
+      opacity: 1;8
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .end-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .end-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #5a1f1f;
+    }
+
+    .end-overlay h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      margin-bottom: 20px;
+    }
+
+    .end-overlay p {
+      font-size: clamp(1.5rem, 2.5vw, 3rem);
+      line-height: 1.4;
+    }
+
   </style>
 </head>
 <body>
@@ -174,74 +277,265 @@
     <img src="Ko.png" alt="Ko1" class="quiz-ko1" />
     <img src="Ko.png" alt="Ko2" class="quiz-ko2" />
 
-    <div class="quiz-content">
-      <h1 class="quiz-title">Hvorfor skal man bruge en ren klud til hver enkelt ko?</h1>
-      <p class="quiz-subtitle">Vælg den rigtige svarmulighed</p>
+    <div class="quiz-content1">
+      <h1 class="quiz-title" id="question-title"></h1>
+      <p class="quiz-subtitle" id="question-counter">
+        Vælg den rigtige svarmulighed
+      </p>
+    </div>
 
+    <div class="quiz-content2">
       <form class="options" id="quiz-form">
-        <label class="option">
-          <input type="radio" name="quiz-answer" value="forkert1" />
-          <span class="custom-radio"></span>
-          <span>Kluden kommer til at lugte</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" value="rigtig" />
-          <span class="custom-radio"></span>
-          <span>Kluden kan overføre yverbetændelse fra ko til ko.</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" value="forkert2" />
-          <span class="custom-radio"></span>
-          <span>Pjat, kluden kan sagtens deles</span>
-        </label>
-
-        <label class="option">
-          <input type="radio" name="quiz-answer" value="forkert3" />
-          <span class="custom-radio"></span>
-          <span>Koen vil ikke dele sin klud med andre køer</span>
-        </label>
+        <div id="options-container"></div>
 
         <button type="submit" class="answer-button">Svar</button>
       </form>
     </div>
+    </div>
+        <div id="quiz-popup" class="popup hidden">
+      <div class="popup-content">
+        <div class="popup-icon" id="popup-icon">✔</div>
+        <p id="popup-text"></p>
+        <button id="popup-button">Næste</button>
+      </div>  
+    </div>    
   </div>
 
-  <script>
-    const form = document.getElementById("quiz-form");
+    <script>
+      const popup = document.getElementById("quiz-popup");
+      const popupText = document.getElementById("popup-text");
+      const popupButton = document.getElementById("popup-button");
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+      function showPopup(text, isCorrect) {
+        popupText.textContent = text;
 
-      const selected = document.querySelector('input[name="quiz-answer"]:checked');
+        const icon = document.getElementById("popup-icon");
+        icon.textContent = isCorrect ? "✔" : "✖";
+        icon.style.color = isCorrect ? "gold" : "#a83232";
 
-      if (!selected) {
-        alert("Vælg et svar først.");
-        return;
+        popup.classList.remove("hidden");
       }
 
-      if (selected.value === "rigtig") {
-        alert("Korrekt svar!");
-        // window.location.href = "sporgsmal2.html";
-      } else {
-        alert("Forkert svar – svarene bliver blandet rundt!");
+      function hidePopup() {
+        popup.classList.add("hidden");
+      }
 
-        const options = Array.from(form.querySelectorAll(".option"));
+      const questions = [
+        {
+          question: "Hvorfor skal man bruge en ren klud til hver enkelt ko?",
+          answers: [
+            "Kluden kommer til at lugte",
+            "Kluden kan overføre yverbetændelse fra ko til ko.",
+            "Pjat, kluden kan sagtens deles",
+            "Koen vil ikke dele sin klud med andre køer"
+          ],
+          correct: 1
+        },
+        {
+          question: "Hvorfor er foderbordet et høj-hygiejne område?",
+          answers: [
+            "Hvis maden bliver kontamineret med smitte, optager kvæget det meget nemt",
+            "Foderbordet bliver hurtigt beskidt, fordi køerne savler meget, når de spiser",
+            "Mange køer spiser det samme sted"
+          ],
+          correct: 0
+        },
+        {
+          question: "Hvorfor er spædkalveafsnittet et høj-hygiejne afsnit?",
+          answers: [
+            "Fordi kalvene slikker meget på hinanden, når de har opbygget en god relation",
+            "Fordi kalvene ikke har udviklet immunforsvar og er meget modtagelige for sygdomme",
+            "Pjat med dig",
+            "Fordi kalvene endnu ikke er renlige"
+          ],
+          correct: 1
+        },
+        {
+          question: "Hvad er vigtigt at gøre ved sygdom hos dyrene?",
+          answers: [
+            "De skal altid behandles med smertestillende og antibiotika",
+            "De bør sættes i sygeboks og derved isoleres fra raske dyr.",
+            "De skal sendes til slagtning med det samme",
+            "De skal bare have lov til at være i fred og ro, så går det over af sig selv"
+          ],
+          correct: 1
+        },
+        {
+          question: "Hvordan skal gangarealer renholdes?",
+          answers: [
+            "Gangarealerne skal fejes en gang om året",
+            "Gangarealer skal være tørre og uden gødning i videst muligt omfang",
+            "Gangarealer skal fejes og vaskes mindst en gang i timen",
+            "Gangarealerne skal fejes"
+          ],
+          correct: 1
+        },
+        {
+          question: "Hvad er den bedste maksimum gruppestørrelse for yngre kalve?",
+          answers: [
+            "6 kalve pr. gruppe",
+            "10 kalve pr. gruppe",
+            "Gruppestørrelse har ingen indflydelse",
+            "3 kalve pr. grupper"
+          ],
+          correct: 0
+        },
+        {
+          question: "Hvor tit skal kælvingsudstyr vaskes?",
+          answers: [
+            "Hver gang det har været brugt",
+            "1 gang om måneden",
+            "1 gang om ugen",
+            "1 gang om dagen"
+          ],
+          correct: 0
+        },
+        {
+          question: "Hvilke basis hygiejneartikler bør som minimum være til rådighed i kalvestalden?",
+          answers: [
+            "Overtrækstøj, støvler og handsker",
+            "Støvler, forklæder og handsker",
+            "Forklæder og handsker",
+            "Beskyttelsesbriller og handsker"
+          ],
+          correct: 0
+        },
+        {
+          question: "Hvorfor skal kalve have råmælk/kolostrum senest 4 timer efter fødsel?",
+          answers: [
+            "Efter den tid begynder tarmbarrieren at lukke sig for antistoffer",
+            "Fordi de er meget sultne, når de bliver født",
+            "Det er noget pjat med de råmælk",
+            "Fordi de er sløve og trætte"
+          ],
+          correct: 0
+        },
+        {
+          question: "Hvilket fodtøj er acceptabelt på foderbordet?",
+          answers: [
+            "Rene støvler eller overtræksstøvler",
+            "Al slags fodtøj",
+            "Intet fodtøj er tilladt på foderbordet",
+            "Træsko, støvler eller overtræksstøvler"
+          ],
+          correct: 0
+        }
+      ];
 
-        selected.checked = false;
+      const form = document.getElementById("quiz-form");
+      const questionTitle = document.getElementById("question-title");
+      const questionCounter = document.getElementById("question-counter");
+      const optionsContainer = document.getElementById("options-container");
 
-        for (let i = options.length - 1; i > 0; i--) {
+      let currentQuestion = 0;
+      let score = 0;
+
+      function loadQuestion() {
+        const q = questions[currentQuestion];
+
+        questionTitle.textContent = q.question;
+        questionCounter.textContent = `Spørgsmål ${currentQuestion + 1} af ${questions.length} – vælg den rigtige svarmulighed`;
+
+        optionsContainer.innerHTML = "";
+
+        q.answers.forEach((answer, index) => {
+          const label = document.createElement("label");
+          label.className = "option";
+
+          label.innerHTML = `
+            <input type="radio" name="quiz-answer" value="${index}" />
+            <span class="custom-radio"></span>
+            <span>${answer}</span>
+          `;
+
+          optionsContainer.appendChild(label);
+        });
+      }
+
+      function shuffleAnswers() {
+        const q = questions[currentQuestion];
+
+        const combined = q.answers.map((answer, index) => ({
+          answer: answer,
+          isCorrect: index === q.correct
+        }));
+
+        for (let i = combined.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [options[i], options[j]] = [options[j], options[i]];
+          [combined[i], combined[j]] = [combined[j], combined[i]];
         }
 
-        options.forEach(option => option.remove());
+        q.answers = combined.map(item => item.answer);
+        q.correct = combined.findIndex(item => item.isCorrect);
 
-        const button = form.querySelector(".answer-button");
-        options.forEach(option => form.insertBefore(option, button));
+        loadQuestion();
       }
-    });
-  </script>
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const selected = document.querySelector('input[name="quiz-answer"]:checked');
+
+        if (!selected) {
+          alert("Vælg et svar først.");
+          return;
+        }
+
+        const selectedAnswer = Number(selected.value);
+        const q = questions[currentQuestion];
+
+        if (selectedAnswer === q.correct) {
+          showPopup("Du har svaret rigtigt på spørgsmålet!", true);
+
+          currentQuestion++;
+
+          if (currentQuestion < questions.length) {
+              loadQuestion();
+            } else {
+              document.querySelector(".quiz-wrapper").style.display = "none";
+              document.getElementById("quiz-end").classList.remove("hidden");
+            }
+        } else {
+          showPopup("Forkert svar – prøv igen!", false);
+          shuffleAnswers();
+        }
+      });
+
+      popupButton.addEventListener("click", () => {
+      hidePopup();
+
+      const q = questions[currentQuestion];
+      const selected = document.querySelector('input[name="quiz-answer"]:checked');
+
+      if (selected && Number(selected.value) === q.correct) {
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+          loadQuestion();
+        } else {
+          questionTitle.textContent = "Quizzen er færdig!";
+          questionCounter.textContent = `Du er færdig 🎉`;
+          optionsContainer.innerHTML = "";
+          document.querySelector(".answer-button").style.display = "none";
+        }
+      } else {
+        shuffleAnswers();
+      }
+      });
+
+
+  loadQuestion();
+</script>
+
+<div id="quiz-end" class="quiz-end hidden">
+  <video autoplay muted loop class="end-video">
+    <source src="Mere komprimeret.mp4" type="video/mp4">
+  </video>
+
+  <div class="end-overlay">
+    <h1>Tillykke!</h1>
+    <p>I har gennemført quizzen<br>og er klar til næste udfordring.</p>
+  </div>
+</div>
 </body>
 </html>
